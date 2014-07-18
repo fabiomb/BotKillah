@@ -1,0 +1,22 @@
+<?php
+if(preg_match('/^config.php/',$_SERVER['PHP_SELF']))
+{ header("HTTP/1.0 404 Not Found"); 
+}
+
+// --------- MYSQL Config --------- 
+$dbhost = "";   // Servidor MySQL
+$dbuname = "";
+$dbpass = "";
+$dbname = "";
+$dbtype = "mysqli";     // mysql4 or MySQL or mysqli
+
+
+$tw_consumer = "";
+$tw_secret = "";
+$tw_token_a ="";
+$tw_token_b = "";
+
+
+date_default_timezone_set('America/Argentina/Buenos_Aires');
+
+?>

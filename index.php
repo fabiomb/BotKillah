@@ -8,14 +8,12 @@ include_once('db/db.php');
 date_default_timezone_set('UTC');
 
 
-
-
         require_once ('codebird-php.php');
-        \Codebird\Codebird::setConsumerKey('siZSIfxOCwpRTzIiztUDvbKoO', 'Qowedk8gJMswUG0vEMLBJOcDxcvt7EF7FULiIfikk4l0xnFZ08'); // static, see 'Using multiple Codebird instances'
+        \Codebird\Codebird::setConsumerKey($tw_consumer, $tw_secret); // static, see 'Using multiple Codebird instances'
 
         $cb = \Codebird\Codebird::getInstance();
         
-        $cb->setToken('2443260073-3C6xBGPv6rpXdHbC1DB4ECcIlLWz5X5JgBOOiJQ', 'hda2lWBSD7rSNO9xD4YoQ1I19w6DgE2pczgixioTrOTPH');
+        $cb->setToken($tw_token_a, $tw_token_b);
 
 
 //$next_cursor = -1;
