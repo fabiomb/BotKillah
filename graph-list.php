@@ -2,8 +2,7 @@
 include_once('config.php');
 include_once('db/db.php');
 
-//header('Content-Type: application/json');
-// creo los nodos iniciales
+// Grid de relaciones
 
 $datos = array();
 $datos["nodes"] = array();

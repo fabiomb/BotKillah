@@ -7,7 +7,7 @@ include_once('db/db.php');
 
 date_default_timezone_set('UTC');
 
-
+// Conecto con Twitter
         require_once ('codebird-php.php');
         \Codebird\Codebird::setConsumerKey($tw_consumer, $tw_secret); // static, see 'Using multiple Codebird instances'
 
@@ -16,13 +16,10 @@ date_default_timezone_set('UTC');
         $cb->setToken($tw_token_a, $tw_token_b);
 
 
-//$next_cursor = -1;
-
-//while ($next_cursor) {  
-        
 $cuenta = 0;        
 $nextCursor = "-1";        
-// seed:
+
+//Primer seed utilizado, id y username
 //$id_str = "2583563579";
 //$screen_name = "zenna159";
 
@@ -31,18 +28,17 @@ if (isset($_GET["screen_name"])) {$screen_name = $_GET["screen_name"];}
 
 if ($screen_name == "")
 {
-
-          $siguiente = "SELECT * FROM `usuario` WHERE visto = 0 and esbot =1  and excluir = 0 limit 0,1";  
-          $resultadosig = $db->sql_query($siguiente);        
+    // entrada por default, comienza el spider buscando uno que esté disponible
+        $siguiente = "SELECT * FROM `usuario` WHERE visto = 0 and esbot =1  and excluir = 0 limit 0,1";  
+        $resultadosig = $db->sql_query($siguiente);        
         while ($row = $db->sql_fetchrow($resultadosig)) 
 	{
 		 $id_str = $row[id_str]; 
                  $screen_name = $row[screen_name]; 
         }
-
 }
-echo "Buscando clones en $screen_name<br /><br />";
 
+echo "Buscando clones en $screen_name<br /><br />";
                 $parameters = array(
                     'cursor' => $nextCursor,
                     'count' =>200,
@@ -50,13 +46,12 @@ echo "Buscando clones en $screen_name<br /><br />";
                 );
 
     $results[$cuenta] = $cb->followers_list($parameters);
-    //var_dump($results[$cuenta]);
     if ($results[$cuenta]->errors)
-    {
+    {   // en caso de error por llegar al límite
         echo "Error! ".$results[$cuenta]->errors[0]->message."<br />";
     }
         
-    //var_dump($results[$cuenta]);
+    //recorro el cursor para buscar el siguiente
     while ($nextCursor) {  
         $old_cursor = $nextCursor;
         $nextCursor = $results[$cuenta]->next_cursor_str;
@@ -71,6 +66,7 @@ echo "Buscando clones en $screen_name<br /><br />";
         if ($nextCursor > 0) {
             echo "Nuevo cursor encontrado! $nextCursor<br />";
             $cuenta++;
+            // 200 es el máximo que devuelve la API de Twitter
                 $parameters = array(
                     'cursor' => $nextCursor,
                     'count' =>200,
@@ -128,9 +124,9 @@ and open the template in the editor.
             }
             else
             {
-                
-           // echo $arrayfollowers->next_cursor_str."<br /><br />";    
+                // ?
             }
+            // lo marco como visto para no volver a usarlo
           $actualizado = "UPDATE usuario SET visto = 1 WHERE id_str = '$id_str'";  
           $db->sql_query($actualizado);
         }
@@ -140,9 +136,9 @@ and open the template in the editor.
         
         // si todo está ok botón con el siguiente
         
-        
-$siguiente = "SELECT * FROM `usuario` WHERE visto = 0 and esbot =1  and excluir = 0 limit 0,1";  
-          $resultadosig = $db->sql_query($siguiente);        
+        // mismo query que si entraba vacío, utilizo un botón pero valdría automatizar
+        $siguiente = "SELECT * FROM `usuario` WHERE visto = 0 and esbot =1  and excluir = 0 limit 0,1";  
+        $resultadosig = $db->sql_query($siguiente);        
         while ($row = $db->sql_fetchrow($resultadosig)) 
 	{
 		 $nextid = $row[id_str]; 

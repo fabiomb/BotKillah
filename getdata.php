@@ -1,10 +1,10 @@
 <?php
 include_once('config.php');
 include_once('db/db.php');
-
+// Export sencillo en json para los datos, ajustar al formato de cada script de gráficos
+// este está adaptado a Sigma
 header('Content-Type: application/json');
 // creo los nodos iniciales
-
 $datos = array();
 $datos["nodes"] = array();
 $datos["edges"] = array(); 
@@ -30,7 +30,7 @@ WHERE B.id_str_inicio = A.id_str
 ) > 100
 and
 
-(SELECT count(*) FROM relacion C WHERE C.id_str_destino = A.id_str) > 10
+(SELECT count(*) FROM relacion C WHERE C.id_str_destino = A.id_str) > 20
 LIMIT 0 , 500";// los primeros 50
 $resultado = $db->sql_query($consulta);    
 
@@ -92,12 +92,9 @@ $cual = 0;
                 
                 unset($relacion);
         }
-        //print_r($datos);
-        
-        
+   
         echo json_encode ($datos);
-        
-        //echo json_last_error_msg();
+     
 /*
 {
   "nodes": [
