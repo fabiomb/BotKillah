@@ -5,23 +5,17 @@ session_start();
 include_once('config.php');
 include_once('db/db.php');
 
-date_default_timezone_set('UTC');
 
 // Conecto con Twitter
-        require_once ('codebird-php.php');
-        \Codebird\Codebird::setConsumerKey($tw_consumer, $tw_secret); // static, see 'Using multiple Codebird instances'
+require_once ('codebird-php.php');
+\Codebird\Codebird::setConsumerKey($tw_consumer, $tw_secret); // static, see 'Using multiple Codebird instances'
 
-        $cb = \Codebird\Codebird::getInstance();
-        
-        $cb->setToken($tw_token_a, $tw_token_b);
+$cb = \Codebird\Codebird::getInstance();
 
+$cb->setToken($tw_token_a, $tw_token_b);
 
 $cuenta = 0;        
 $nextCursor = "-1";        
-
-//Primer seed utilizado, id y username
-//$id_str = "2583563579";
-//$screen_name = "zenna159";
 
 if (isset($_GET["id_str"])) {$id_str = $_GET["id_str"];}
 if (isset($_GET["screen_name"])) {$screen_name = $_GET["screen_name"];}
