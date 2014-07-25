@@ -38,23 +38,13 @@
  *
  ***************************************************************************/
 
-
-global $site_admin, $dir, $db_prefix;
-if ($site_admin == 1) {
-    $the_include = "../db";
-} else {
-    $the_include = "db";
-}
-$the_include = $dir.$the_include;
-
-
-include("".$the_include."/mysqli.php");	
+include("mysqli.php");	
 
 $db = new sql_db($dbhost, $dbuname, $dbpass, $dbname, $dbport);
 
 //
 if(!$db->db_connect_id) {
-    message_die(CRITICAL_ERROR, "Could not connect to the database");
+    die("Could not connect to the database");
 }
 
  // ################################
@@ -67,14 +57,3 @@ if(!$db->db_connect_id) {
 //		$config_data[$row[opcion]] = $row[valor];
 //	}
 
- // ################################
-
-function message_die($tipo, $texto)
-{
-	echo "<br><br>Se ha producido un error en la base de datos<br>
-	<br>
-	".$texto."";
-	exit;
-}
-
-?>

@@ -9,14 +9,20 @@ $dbuname = "";
 $dbpass = "";
 $dbname = "";
 $dbtype = "mysqli";     // mysql4 or MySQL or mysqli
+$dbport = false;
 
-
+// API key
 $tw_consumer = "";
+// API secret
 $tw_secret = "";
+// Access token 111..-xxx..
 $tw_token_a ="";
+// Access token secret
 $tw_token_b = "";
 
+// Primer seed utilizado, id y username
+// Si no hay nada los toma de la DB
+$id_str = false;
+$screen_name = false;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
-
-?>

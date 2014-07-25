@@ -15,4 +15,8 @@ graph-list.php => Grid de relaciones de los más relevantes
 
 /sql/botkillah.sql.gz => Datos de ejemplo de red existente
 
+## Dependencias
 
+* PHP +5.x
+* MySQL
+* php-curl, php-mysql

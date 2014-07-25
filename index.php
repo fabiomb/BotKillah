@@ -1,157 +1,86 @@
 <?php
 session_start();
 
-
 include_once('config.php');
 include_once('db/db.php');
 
-date_default_timezone_set('UTC');
-
 // Conecto con Twitter
-        require_once ('codebird-php.php');
-        \Codebird\Codebird::setConsumerKey($tw_consumer, $tw_secret); // static, see 'Using multiple Codebird instances'
+require_once ('codebird-php.php');
+\Codebird\Codebird::setConsumerKey($tw_consumer, $tw_secret); // static, see 'Using multiple Codebird instances'
 
-        $cb = \Codebird\Codebird::getInstance();
-        
-        $cb->setToken($tw_token_a, $tw_token_b);
+$cb = \Codebird\Codebird::getInstance();
+$cb->setToken($tw_token_a, $tw_token_b);
 
-
-$cuenta = 0;        
-$nextCursor = "-1";        
-
-//Primer seed utilizado, id y username
-//$id_str = "2583563579";
-//$screen_name = "zenna159";
+include('bot.php');
 
 if (isset($_GET["id_str"])) {$id_str = $_GET["id_str"];}
 if (isset($_GET["screen_name"])) {$screen_name = $_GET["screen_name"];}
+if ( ! $screen_name ) {
+    $usuario = get_random_bot();
 
-if ($screen_name == "")
-{
-    // entrada por default, comienza el spider buscando uno que esté disponible
-        $siguiente = "SELECT * FROM `usuario` WHERE visto = 0 and esbot =1  and excluir = 0 limit 0,1";  
-        $resultadosig = $db->sql_query($siguiente);        
-        while ($row = $db->sql_fetchrow($resultadosig)) 
-	{
-		 $id_str = $row[id_str]; 
-                 $screen_name = $row[screen_name]; 
-        }
+    $id_str = $usuario['id_str'];
+    $screen_name = $usuario['screen_name'];
 }
 
-echo "Buscando clones en $screen_name<br /><br />";
-                $parameters = array(
-                    'cursor' => $nextCursor,
-                    'count' =>200,
-                    'screen_name'=> $screen_name
-                );
-
-    $results[$cuenta] = $cb->followers_list($parameters);
-    if ($results[$cuenta]->errors)
-    {   // en caso de error por llegar al límite
-        echo "Error! ".$results[$cuenta]->errors[0]->message."<br />";
-    }
-        
-    //recorro el cursor para buscar el siguiente
-    while ($nextCursor) {  
-        $old_cursor = $nextCursor;
-        $nextCursor = $results[$cuenta]->next_cursor_str;
-        
-        if (($nextCursor == $old_cursor) and ($cuenta > 2))
-        {
-            echo "Se repite!";
-            $nextCursor = NULL; // se repite
-        }
-        
-        echo "Cuenta: $cuenta Cursor anterior: $old_cursor Cursor nuevo: $nextCursor.<br />";
-        if ($nextCursor > 0) {
-            echo "Nuevo cursor encontrado! $nextCursor<br />";
-            $cuenta++;
-            // 200 es el máximo que devuelve la API de Twitter
-                $parameters = array(
-                    'cursor' => $nextCursor,
-                    'count' =>200,
-                    'screen_name'=> $screen_name
-                );
-            $results[$cuenta] = $cb->followers_list($parameters);
-            
-            //var_dump($results[$cuenta]);
-            echo "Siguiente: ".$results[$cuenta]->next_cursor_str."<br /><br />";
-        }
-        if (($nextCursor == "0") or  ($nextCursor == "-1")) {$nextCursor = NULL;} // vacío
-        if ($cuenta == 20) {$nextCursor = NULL;} // protección
-    }
-    
 ?>
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
         <meta charset="UTF-8">
-        <title></title>
+        <title>BotKillah!<?= $screen_name ? ' - '.$screen_name : '' ?></title>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" media="all" rel="stylesheet" type="text/css">
+        <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css" media="all" rel="stylesheet" type="text/css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script>
+          $(document).ready(function(){
+
+            var next = function() {
+              if ( $('#id_str').val() != "") {
+                $('#next').click();
+              }
+
+            }
+
+            var found = $('.alert').text().search(/Rate limit/i);
+
+            if ( found != -1 ) {
+              setTimeout(function(){
+                
+                location.reload();
+
+              }, 60000 * 15);
+
+            } else {
+              next();
+            }
+
+          });
+        </script>
     </head>
     <body>
-        <?php
-        // put your code here
-        
-        foreach ($results as $resulta)
-        {
-        echo "=======================================================<br />";
-        $x = 0;
-        foreach ($resulta as $arrayfollowers)
-        {
-            
-            $x++;
-            if ($x == 1)
-            {
-                foreach ($arrayfollowers as $followers)
-                {
-                echo  $followers->screen_name."<br />";    
-                
-                $guarda = "INSERT INTO usuario (id_str, name, screen_name, location, description, followers_count, friends_count, created_at, statuses_count, lang) "
-                        . "VALUES ('$followers->id_str','$followers->name', '$followers->screen_name', '$followers->location', '$followers->description', "
-                        . "'$followers->followers_count', '$followers->friends_count', '$followers->created_at', '$followers->statuses_count', '$followers->lang' )";
-                $db->sql_query($guarda);
-                
-                $relacion = "INSERT INTO relacion (id_str_inicio, id_str_destino) VALUES ('$id_str','$followers->id_str')";
-                
-                $db->sql_query($relacion);
-                
-                }
-            }
-            else
-            {
-                // ?
-            }
-            // lo marco como visto para no volver a usarlo
-          $actualizado = "UPDATE usuario SET visto = 1 WHERE id_str = '$id_str'";  
-          $db->sql_query($actualizado);
-        }
-        }
-        
-        
-        
-        // si todo está ok botón con el siguiente
-        
-        // mismo query que si entraba vacío, utilizo un botón pero valdría automatizar
-        $siguiente = "SELECT * FROM `usuario` WHERE visto = 0 and esbot =1  and excluir = 0 limit 0,1";  
-        $resultadosig = $db->sql_query($siguiente);        
-        while ($row = $db->sql_fetchrow($resultadosig)) 
-	{
-		 $nextid = $row[id_str]; 
-                 $nextus = $row[screen_name]; 
-        }
+ <?php
 
+        mark_as_viewed($id_str);
+        
+        $users = array_merge(get_followers($screen_name),get_friends($screen_name));
+        $users = array_unique($users,SORT_REGULAR);
+        foreach ( $users as $f ) {
+            echo  '<a href="http://twitter.com/'.$f->screen_name.'" target="_blank" >'.$f->screen_name.'</a> <a href="?id_str='.$f->id_str.'&amp;screen_name='.$f->screen_name.'"><i class="icon-chevron-sign-right"></i></a><br />';
+
+            save_if_not_exist($f);
+            save_relation($id_str,$f->id_str);
+            
+        }
+        
+        $next = get_random_bot();
         ?>
         <form action="index.php" method="GET">
             
-            <input type="hidden" name="id_str" value="<?php echo $nextid;?>">
-            <input type="hidden" name="screen_name" value="<?php echo $nextus;?>">
+            <input id="id_str" type="hidden" name="id_str" value="<?= $next['id_str'] ?>">
+            <input id="screen_name" type="hidden" name="screen_name" value="<?= $next['screen_name'] ?>">
             
-            <input type="submit" value="Siguiente: <?php echo $nextus;?>">
+            <input id="next" type="submit" value="Siguiente: <?= $next['screen_name'] ? $next['screen_name'] : 'NONE' ?>">
         
     </body>
 </html>
