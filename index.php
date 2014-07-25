@@ -27,7 +27,7 @@ if ( ! $screen_name ) {
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>BotKillah!</title>
+        <title>BotKillah!<?= $screen_name ? ' - '.$screen_name : '' ?></title>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" media="all" rel="stylesheet" type="text/css">
         <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css" media="all" rel="stylesheet" type="text/css">
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" ></script>
@@ -47,7 +47,7 @@ if ( ! $screen_name ) {
             if ( found != -1 ) {
               setTimeout(function(){
                 
-                next();
+                location.reload();
 
               }, 60000 * 15);
 
