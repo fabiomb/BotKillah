@@ -35,7 +35,8 @@ if ( ! $screen_name ) {
         $actualizado = "UPDATE usuario SET visto = 1 WHERE id_str = '$id_str'";  
         $db->sql_query($actualizado);       // put your code here
         
-        foreach ( get_followers($screen_name) as $f ) {
+        $users = array_merge(get_followers($screen_name),get_friends($screen_name));
+        foreach ( $users as $f ) {
             echo  '<a href="http://twitter.com/'.$f->screen_name.'" target="_blank" >'.$f->screen_name."</a><br />";
 
             $guarda = "INSERT INTO usuario (id_str, name, screen_name, location, description, followers_count, friends_count, created_at, statuses_count, lang) "
@@ -48,7 +49,7 @@ if ( ! $screen_name ) {
             $db->sql_query($relacion);
         }
         
-        $next = get_random_bot;
+        $next = get_random_bot();
         ?>
         <form action="index.php" method="GET">
             
