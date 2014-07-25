@@ -60,23 +60,17 @@ if ( ! $screen_name ) {
     </head>
     <body>
  <?php
-        // lo marco como visto para no volver a usarlo
-        $actualizado = "UPDATE usuario SET visto = 1 WHERE id_str = '$id_str'";  
-        $db->sql_query($actualizado);       // put your code here
+
+        mark_as_viewed($id_str);
         
         $users = array_merge(get_followers($screen_name),get_friends($screen_name));
         $users = array_unique($users,SORT_REGULAR);
         foreach ( $users as $f ) {
             echo  '<a href="http://twitter.com/'.$f->screen_name.'" target="_blank" >'.$f->screen_name.'</a> <a href="?id_str='.$f->id_str.'&amp;screen_name='.$f->screen_name.'"><i class="icon-chevron-sign-right"></i></a><br />';
 
-            $guarda = "INSERT INTO usuario (id_str, name, screen_name, location, description, followers_count, friends_count, created_at, statuses_count, lang) "
-                    . "VALUES ('$f->id_str','$f->name', '$f->screen_name', '$f->location', '$f->description', "
-                    . "'$f->followers_count', '$f->friends_count', '$f->created_at', '$f->statuses_count', '$f->lang' )";
-            $db->sql_query($guarda);
+            save_if_not_exist($f);
+            save_relation($id_str,$f->id_str);
             
-            $relacion = "INSERT INTO relacion (id_str_inicio, id_str_destino) VALUES ('$id_str','$f->id_str')";
-            
-            $db->sql_query($relacion);
         }
         
         $next = get_random_bot();

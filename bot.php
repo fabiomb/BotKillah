@@ -91,3 +91,24 @@ function handle_errors($result) {
         echo '<div class="alert alert-warning"><strong>Error!</strong> '.$result->errors[0]->message."</div><br />";
     }
 }
+
+function save_if_not_exist($f) {
+    global $db;
+    $guarda = "INSERT INTO usuario (id_str, name, screen_name, location, description, followers_count, friends_count, created_at, statuses_count, lang) "
+            . "VALUES ('$f->id_str','$f->name', '$f->screen_name', '$f->location', '$f->description', "
+            . "'$f->followers_count', '$f->friends_count', '$f->created_at', '$f->statuses_count', '$f->lang' )";
+    $db->sql_query($guarda);
+}
+
+function save_relation ($from, $to ) {
+    global $db;
+    $relacion = "INSERT INTO relacion (id_str_inicio, id_str_destino) VALUES ('$from','$to')";
+    $db->sql_query($relacion);
+}
+
+function mark_as_viewed($id_str) {
+    global $db;
+    // lo marco como visto para no volver a usarlo
+    $actualizado = "UPDATE usuario SET visto = 1 WHERE id_str = '$id_str'";  
+    $db->sql_query($actualizado);
+}
