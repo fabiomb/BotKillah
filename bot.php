@@ -41,7 +41,7 @@ function get_friends ( $screen_name ) {
         $followers = array_merge($followers, $result->users);
 
         // Asi no bardea el limite
-        if ( $i > 5 ) { break; }
+        if ( $i > 6 ) { break; }
     }
 
     return $followers;
@@ -80,7 +80,7 @@ function get_followers ( $screen_name ) {
         $followers = array_merge($followers, $result->users);
 
         // Asi no bardea el limite
-        if ( $i > 5 ) { break; }
+        if ( $i > 6 ) { break; }
     }
 
     return $followers;
