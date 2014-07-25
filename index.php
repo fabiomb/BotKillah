@@ -18,8 +18,8 @@ if (isset($_GET["screen_name"])) {$screen_name = $_GET["screen_name"];}
 if ( ! $screen_name ) {
     $usuario = get_random_bot();
 
-    $id_str = $usuario[id_str];
-    $screen_name = $usuario[screen_name];
+    $id_str = $usuario['id_str'];
+    $screen_name = $usuario['screen_name'];
 }
 
 ?>
@@ -27,7 +27,9 @@ if ( ! $screen_name ) {
 <html>
     <head>
         <meta charset="UTF-8">
-        <title></title>
+        <title>BotKillah!</title>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js" media="all" rel="stylesheet" type="text/css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" media="all" rel="stylesheet" type="text/css">
     </head>
     <body>
  <?php
@@ -37,7 +39,7 @@ if ( ! $screen_name ) {
         
         $users = array_merge(get_followers($screen_name),get_friends($screen_name));
         foreach ( $users as $f ) {
-            echo  '<a href="http://twitter.com/'.$f->screen_name.'" target="_blank" >'.$f->screen_name."</a><br />";
+            echo  '<a href="http://twitter.com/'.$f->screen_name.'" target="_blank" >'.$f->screen_name.'</a> <a href="?id_str='.$f->id_str.'&amp;screen_name='.$f->screen_name.'"><i class="icon-chevron-sign-right"></i></a><br />';
 
             $guarda = "INSERT INTO usuario (id_str, name, screen_name, location, description, followers_count, friends_count, created_at, statuses_count, lang) "
                     . "VALUES ('$f->id_str','$f->name', '$f->screen_name', '$f->location', '$f->description', "
@@ -53,10 +55,10 @@ if ( ! $screen_name ) {
         ?>
         <form action="index.php" method="GET">
             
-            <input type="hidden" name="id_str" value="<?= $next[id_str] ?>">
-            <input type="hidden" name="screen_name" value="<?= $next[screen_name] ?>">
+            <input type="hidden" name="id_str" value="<?= $next['id_str'] ?>">
+            <input type="hidden" name="screen_name" value="<?= $next['screen_name'] ?>">
             
-            <input type="submit" value="Siguiente: <?= $next[screen_name] ?>">
+            <input type="submit" value="Siguiente: <?= $next['screen_name'] ? $next['screen_name'] : 'NONE' ?>">
         
     </body>
 </html>

@@ -28,7 +28,7 @@ function get_friends ( $screen_name ) {
         $nextCursor = $result->next_cursor_str;
 
         if ($result->errors) {
-            echo "Error! ".$results[$cuenta]->errors[0]->message."<br />";
+            echo "Error! ".$result->errors[0]->message."<br />";
         }
         
         if (($nextCursor == $old_cursor) and ($cuenta > 2)) {
@@ -64,7 +64,7 @@ function get_followers ( $screen_name ) {
         $nextCursor = $result->next_cursor_str;
 
         if ($result->errors) {
-            echo "Error! ".$results[$cuenta]->errors[0]->message."<br />";
+            echo "Error! ".$result->errors[0]->message."<br />";
         }
         
         if (($nextCursor == $old_cursor) and ($cuenta > 2)) {
