@@ -28,8 +28,35 @@ if ( ! $screen_name ) {
     <head>
         <meta charset="UTF-8">
         <title>BotKillah!</title>
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js" media="all" rel="stylesheet" type="text/css">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" media="all" rel="stylesheet" type="text/css">
+        <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css" media="all" rel="stylesheet" type="text/css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script>
+          $(document).ready(function(){
+
+            var next = function() {
+              if ( $('#id_str').val() != "") {
+                $('#next').click();
+              }
+
+            }
+
+            var found = $('.alert').text().search(/Rate limit/i);
+
+            if ( found != -1 ) {
+              setTimeout(function(){
+                
+                next();
+
+              }, 60000 * 15);
+
+            } else {
+              next();
+            }
+
+          });
+        </script>
     </head>
     <body>
  <?php
@@ -56,10 +83,10 @@ if ( ! $screen_name ) {
         ?>
         <form action="index.php" method="GET">
             
-            <input type="hidden" name="id_str" value="<?= $next['id_str'] ?>">
-            <input type="hidden" name="screen_name" value="<?= $next['screen_name'] ?>">
+            <input id="id_str" type="hidden" name="id_str" value="<?= $next['id_str'] ?>">
+            <input id="screen_name" type="hidden" name="screen_name" value="<?= $next['screen_name'] ?>">
             
-            <input type="submit" value="Siguiente: <?= $next['screen_name'] ? $next['screen_name'] : 'NONE' ?>">
+            <input id="next" type="submit" value="Siguiente: <?= $next['screen_name'] ? $next['screen_name'] : 'NONE' ?>">
         
     </body>
 </html>
