@@ -38,6 +38,7 @@ if ( ! $screen_name ) {
         $db->sql_query($actualizado);       // put your code here
         
         $users = array_merge(get_followers($screen_name),get_friends($screen_name));
+        $users = array_unique($users,SORT_REGULAR);
         foreach ( $users as $f ) {
             echo  '<a href="http://twitter.com/'.$f->screen_name.'" target="_blank" >'.$f->screen_name.'</a> <a href="?id_str='.$f->id_str.'&amp;screen_name='.$f->screen_name.'"><i class="icon-chevron-sign-right"></i></a><br />';
 
