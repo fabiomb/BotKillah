@@ -38,8 +38,10 @@ function get_friends ( $screen_name ) {
 
         if (($nextCursor == "0") or  ($nextCursor == "-1")) {$nextCursor = NULL;} // vacío
 
+        if (is_array($result->users))
+        {
         $followers = array_merge($followers, $result->users);
-
+        }
         // Asi no bardea el limite
         if ( $i > 6 ) { break; }
     }
@@ -77,8 +79,10 @@ function get_followers ( $screen_name ) {
 
         if (($nextCursor == "0") or  ($nextCursor == "-1")) {$nextCursor = NULL;} // vacío
 
-        $followers = array_merge($followers, $result->users);
-
+        if (is_array($result->users))
+        {
+            $followers = array_merge($followers, $result->users);
+        }
         // Asi no bardea el limite
         if ( $i > 6 ) { break; }
     }
