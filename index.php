@@ -16,6 +16,8 @@ include('bot.php');
 
 if (isset($_GET["id_str"])) {$id_str = $_GET["id_str"];}
 if (isset($_GET["screen_name"])) {$screen_name = $_GET["screen_name"];}
+if (isset($_GET["esbot"])) {$esbot = $_GET["esbot"];}
+
 if ( ! $screen_name ) {
     $usuario = get_random_bot();
 
@@ -34,7 +36,7 @@ if ( ! $screen_name ) {
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
         <script>
-          $(document).ready(function(){
+          /*$(document).ready(function(){
 
             var next = function() {
               if ( $('#id_str').val() != "") {
@@ -56,13 +58,15 @@ if ( ! $screen_name ) {
               next();
             }
 
-          });
+          });*/
         </script>
     </head>
     <body>
  <?php
     // marco como leído
     mark_as_viewed($id_str);
+    if ($esbot == "1" ) {mark_as_bot($id_str);};
+    
     if ($screen_name <> "")
     {
         // tomo los tuits, prueba típica de bots para análisis posterior
@@ -75,7 +79,11 @@ if ( ! $screen_name ) {
         $users = array_unique($users,SORT_REGULAR);
 
     foreach ( $users as $f ) {
-        echo  '<a href="http://twitter.com/'.$f->screen_name.'" target="_blank" >'.$f->screen_name.'</a> <a href="?id_str='.$f->id_str.'&amp;screen_name='.$f->screen_name.'"><i class="icon-chevron-sign-right"></i></a><br />';
+        echo '<a href="http://twitter.com/'.$f->screen_name.'" target="_blank" >'.$f->screen_name.'</a>';
+        echo '<a href="?id_str='.$f->id_str.'&amp;screen_name='.$f->screen_name.'"><i class="icon-chevron-sign-right"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;';
+        echo '<a href="?id_str='.$f->id_str.'&amp;screen_name='.$f->screen_name.'&esbot=1"><i class="icon-android"></i></a>';
+        
+        echo '<br />';
 
         // agrego condición de fecha para filtrar más rápido
        /* if ((strpos($f->created_at, '2014') <> '0') or (strpos($f->created_at, '2015') <> '0'))

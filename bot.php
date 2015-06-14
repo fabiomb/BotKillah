@@ -169,3 +169,10 @@ function mark_as_viewed($id_str) {
     $actualizado = "UPDATE usuario SET visto = 1 WHERE id_str = '$id_str'";  
     $db->sql_query($actualizado);
 }
+
+function mark_as_bot($id_str) {
+    global $db;
+    // lo marco como visto para no volver a usarlo
+    $actualizado = "UPDATE usuario SET esbot = 1 WHERE id_str = '$id_str'";  
+    $db->sql_query($actualizado);
+}
