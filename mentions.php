@@ -12,16 +12,18 @@ $consulta = "SELECT texto FROM `tuit` WHERE texto REGEXP '@[[:alnum:]]' ";
 
 $resultado = $db->sql_query($consulta);    
 $xx = 0;
+$menciones = array();
         while ($row = $db->sql_fetchrow($resultado)) 
 	{
             $xx++;
             $string = $row[texto];
             //echo $string;
                 preg_match_all('/(^|[^a-z0-9_])@([a-z0-9_]+)/i',$string,$m);
-
+                $menciones[] = $m[0][0];
 		$nombres = $nombres . $m[0][0]."<br />";
         }
-
+$menciones = array_unique($menciones,SORT_REGULAR);
+$cuenta = count ($menciones);
 ?>
 <!DOCTYPE html>
 <html>
@@ -36,9 +38,10 @@ $xx = 0;
         
         <h2>Mencionados</h2>
 
-        <?php echo $nombres;?>
+        <?php foreach ($menciones as $mencion) {
+            echo $mencion."<br />";}?>
         <br />
-        Total: <?php echo $xx;?>
+        Total: <?php echo $cuenta;?>
 
     </body>
 </html>

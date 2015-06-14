@@ -56,27 +56,15 @@ function get_tuits ($screen_name)
 
     $nextCursor = "-1";
     $i = 0;
-
+    // tomo 50 tuits, más no hace falta, se debería parametrizar
     $parameters = array(
         'cursor' => $nextCursor,
         'count' =>50,
         'screen_name'=> $screen_name
     );    
     
-   /* while ( $nextCursor ) {
-        $i++;*/
         $result = $cb->statuses_userTimeline($parameters);
-        
 
-        /*foreach  ($result as $tuit)
-        {   
-          echo "Fecha: ". $tuit->created_at."<br />";
-          echo "Texto: ". $tuit->text."<br />";
-          echo "<hr>";
-          
-        }
-        
-            */
     return $result;
 }
 
