@@ -61,28 +61,35 @@ if ( ! $screen_name ) {
     </head>
     <body>
  <?php
-
-        mark_as_viewed($id_str);
-        if ($screen_name <> "")
-        {
-        $users = array_merge(get_followers($screen_name),get_friends($screen_name));
-        
-        
+    // marco como leído
+    mark_as_viewed($id_str);
+    if ($screen_name <> "")
+    {
+        // tomo los tuits, prueba típica de bots para análisis posterior
+        $tuits = get_tuits ($screen_name);
+        // guardo los tuits del usuario analizado
+        save_tuits ($id_str, $screen_name, $tuits);
+        // tomo followers y amigos
+        $users = array_merge(get_followers($screen_name),get_friends($screen_name));        
+        // ordeno y limpio duplicados
         $users = array_unique($users,SORT_REGULAR);
 
-        foreach ( $users as $f ) {
-            echo  '<a href="http://twitter.com/'.$f->screen_name.'" target="_blank" >'.$f->screen_name.'</a> <a href="?id_str='.$f->id_str.'&amp;screen_name='.$f->screen_name.'"><i class="icon-chevron-sign-right"></i></a><br />';
+    foreach ( $users as $f ) {
+        echo  '<a href="http://twitter.com/'.$f->screen_name.'" target="_blank" >'.$f->screen_name.'</a> <a href="?id_str='.$f->id_str.'&amp;screen_name='.$f->screen_name.'"><i class="icon-chevron-sign-right"></i></a><br />';
 
-            // agrego condición de fecha para filtrar más rápido
-            if (strpos($f->created_at, '2014') <> '0')
-            {
-                save_if_not_exist($f);
-                save_relation($id_str,$f->id_str);
-            }
-        }
-        }        
-        $next = get_random_bot();
-        ?>
+        // agrego condición de fecha para filtrar más rápido
+       /* if ((strpos($f->created_at, '2014') <> '0') or (strpos($f->created_at, '2015') <> '0'))
+        {*/
+            // si no existe lo guardo
+            save_if_not_exist($f);
+            // guardo su relación
+            save_relation($id_str,$f->id_str);
+        /*}*/
+    }
+    }        
+    // busco uno siguiente al azar
+    $next = get_random_bot();
+?>
         <form action="index.php" method="GET">
             
             <input id="id_str" type="hidden" name="id_str" value="<?= $next['id_str'] ?>">

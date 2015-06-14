@@ -50,6 +50,37 @@ function get_friends ( $screen_name ) {
 }
 
 
+function get_tuits ($screen_name)
+{
+    global $cb;
+
+    $nextCursor = "-1";
+    $i = 0;
+
+    $parameters = array(
+        'cursor' => $nextCursor,
+        'count' =>50,
+        'screen_name'=> $screen_name
+    );    
+    
+   /* while ( $nextCursor ) {
+        $i++;*/
+        $result = $cb->statuses_userTimeline($parameters);
+        
+
+        /*foreach  ($result as $tuit)
+        {   
+          echo "Fecha: ". $tuit->created_at."<br />";
+          echo "Texto: ". $tuit->text."<br />";
+          echo "<hr>";
+          
+        }
+        
+            */
+    return $result;
+}
+
+
 function get_followers ( $screen_name ) {
     global $cb;
 
@@ -102,6 +133,28 @@ function save_if_not_exist($f) {
             . "VALUES ('$f->id_str','$f->name', '$f->screen_name', '$f->location', '$f->description', "
             . "'$f->followers_count', '$f->friends_count', '$f->created_at', '$f->statuses_count', '$f->lang' )";
     $db->sql_query($guarda);
+}
+
+function save_tuits($id_str, $screen_name,$result) {
+    global $db;
+    
+        foreach  ($result as $tuit)
+        {   
+          $fecha = $tuit->created_at;
+          $texto = $tuit->text;
+          $id_tuit = $tuit->id_str;
+          $favorited =  $tuit->favorited;
+          $retweeted =  $tuit->retweeted;
+          if ($texto <> "")
+          {
+                $guarda = "INSERT INTO tuit (id_str, screen_name, fecha, texto, id_tuit, favorited, retweeted) "
+                        . "VALUES ('$id_str','$screen_name', '$fecha', '$texto', '$id_tuit', "
+                        . "'$favorited', '$retweeted' )";
+                $db->sql_query($guarda);
+          }
+        }
+
+
 }
 
 function save_relation ($from, $to ) {
