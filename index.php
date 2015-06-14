@@ -80,7 +80,7 @@ if ( ! $screen_name ) {
 
     foreach ( $users as $f ) {
 
-        echo '<a href="http://twitter.com/'.$f->screen_name.'" target="_blank" >'.$f->screen_name.'</a> (FO:'.$f->follower_count.' - FC:'.$f->friends_count.' - TW:'.$f->statuses_count.')';
+        echo '<a href="http://twitter.com/'.$f->screen_name.'" target="_blank" >'.$f->screen_name.'</a> (FO:'.$f->followers_count.' - FC:'.$f->friends_count.' - TW:'.$f->statuses_count.')';
         echo '<a href="?id_str='.$f->id_str.'&amp;screen_name='.$f->screen_name.'"><i class="icon-chevron-sign-right"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;';
         echo '<a href="?id_str='.$f->id_str.'&amp;screen_name='.$f->screen_name.'&esbot=1"><i class="icon-android"></i></a>';
         
