@@ -64,7 +64,7 @@ function get_tuits ($screen_name)
     );    
     
         $result = $cb->statuses_userTimeline($parameters);
-
+        
     return $result;
 }
 
