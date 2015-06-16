@@ -3,13 +3,6 @@ session_start();
 
 include_once('config.php');
 
-/* ################################################################## **/
-/* TODO PARAMETRIZAR ESTO EN ALGUN LADO!!! */
-$tags = array ("#cienrazonesparaNOvotaraMACRI","cienrazonesparanovotaramacri.com", "Macri");
-// aumento el tiempo de ejecución
-set_time_limit(1200);
-$limite_tags = 10;// a partir de esta cuenta ya lo marco como bot porque seguro lo es.
-/* ################################################################## **/
 
 include_once('db/db.php');
 

@@ -26,3 +26,14 @@ $id_str = false;
 $screen_name = false;
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
+
+/* ################################################################## **/
+/* TAGS a comparar, si se deja vacío no se identifican */
+$tags = array ("test de tags");
+
+// aumento el tiempo de ejecución
+set_time_limit(1200);
+
+// a partir de esta cuenta ya lo marco como bot porque seguro lo es.
+$limite_tags = 10;
+/* ################################################################## **/
