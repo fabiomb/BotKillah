@@ -4,11 +4,27 @@
 function get_random_bot() {
     global $db;
     // entrada por default, comienza el spider buscando uno que esté disponible
-    $siguiente = "SELECT * FROM `usuario` WHERE visto = 0 and esbot =1  and excluir = 0 limit 0,1";  
+    $siguiente = "SELECT * FROM `usuario` WHERE visto = 0 and esbot = 1  and excluir = 0 limit 0,1";  
     $resultadosig = $db->sql_query($siguiente);        
     return $db->sql_fetchrow($resultadosig);
 }
-
+function existe_user($id_str)
+{
+    // devuelve un usuario que ya se visitó, para no volver a pasar una y otra vez por los mismos
+    global $db;
+    $siguiente = "SELECT esbot, visto FROM `usuario` WHERE excluir = 0 and id_str = '$id_str' limit 0,1";  
+    $resultadosig = $db->sql_query($siguiente);      
+    $row = $db->sql_fetchrow($resultadosig);
+    if ($row["visto"] == 1)
+    {
+        $estado = TRUE;
+    }
+    else 
+    {
+        $estado = FALSE;
+    }
+return $estado;
+}
 function get_friends ( $screen_name ) {
     global $cb;
 
@@ -115,11 +131,11 @@ function handle_errors($result) {
     }
 }
 
-function save_if_not_exist($f) {
+function save_if_not_exist($f, $esbot) {
     global $db;
-    $guarda = "INSERT INTO usuario (id_str, name, screen_name, location, description, followers_count, friends_count, created_at, statuses_count, lang) "
+    $guarda = "INSERT INTO usuario (id_str, name, screen_name, location, description, followers_count, friends_count, created_at, statuses_count, lang, esbot) "
             . "VALUES ('$f->id_str','$f->name', '$f->screen_name', '$f->location', '$f->description', "
-            . "'$f->followers_count', '$f->friends_count', '$f->created_at', '$f->statuses_count', '$f->lang' )";
+            . "'$f->followers_count', '$f->friends_count', '$f->created_at', '$f->statuses_count', '$f->lang', '$esbot' )";
     $db->sql_query($guarda);
 }
 
@@ -163,4 +179,75 @@ function mark_as_bot($id_str) {
     // lo marco como visto para no volver a usarlo
     $actualizado = "UPDATE usuario SET esbot = 1 WHERE id_str = '$id_str'";  
     $db->sql_query($actualizado);
+}
+
+function scrap_user_tl ($screen_name, $tags)
+{
+    // devuelve cierta data de tuits del usuario para identificar manualmente si es o no y no consumir API
+    
+    $pagina = get_CURL ("https://twitter.com/".$screen_name);
+    $document = new DOMDocument;
+    libxml_use_internal_errors(true);
+    $document->loadHTML($pagina);
+    $xpath = new DOMXPath($document);
+
+    $tweets = $xpath->query("//p[@class='TweetTextSize TweetTextSize--16px js-tweet-text tweet-text']");
+
+    
+    $cuenta = 0;
+
+    foreach ($tweets as $tweet)
+    {
+        $string = $tweet->nodeValue;
+        $largo = strlen ($string);
+        foreach ($tags as $tag)
+        {
+            $posicion = strpos($string, $tag);
+            if ($posicion)
+            {
+                $cuenta++;
+            }
+        }
+    }
+    
+    
+    return $cuenta;
+}
+
+
+function get_CURL ($url)
+{
+    $curlopt_useragent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2) Gecko/20100115 Firefox/3.6 (.NET CLR 3.5.30729)';
+
+    $ch = curl_init();
+
+    $curl_opt = array(
+        CURLOPT_FOLLOWLOCATION  => 1,
+        CURLOPT_HEADER      => 0,
+        CURLOPT_RETURNTRANSFER  => 1,
+        CURLOPT_USERAGENT   => $curlopt_useragent,
+        CURLOPT_URL       => $url,
+        CURLOPT_TIMEOUT         => 5,
+        CURLOPT_REFERER         => 'http://' . $_SERVER['HTTP_HOST'],
+    );
+
+    curl_setopt_array($ch, $curl_opt);
+
+    
+
+    
+    $content = curl_exec($ch);
+
+        if($content === false)
+    {
+        echo 'Curl error: ' . curl_error($ch);
+    }
+
+    if (!is_null($curl_info)) {
+        $curl_info = curl_getinfo($ch);
+        
+    }
+
+    curl_close($ch);
+    return $content;
 }

@@ -1,7 +1,16 @@
-<?php
+<?php 
 session_start();
 
 include_once('config.php');
+
+/* ################################################################## **/
+/* TODO PARAMETRIZAR ESTO EN ALGUN LADO!!! */
+$tags = array ("#cienrazonesparaNOvotaraMACRI","cienrazonesparanovotaramacri.com", "Macri");
+// aumento el tiempo de ejecución
+set_time_limit(1200);
+$limite_tags = 10;// a partir de esta cuenta ya lo marco como bot porque seguro lo es.
+/* ################################################################## **/
+
 include_once('db/db.php');
 
 // Conecto con Twitter
@@ -78,19 +87,35 @@ if ( ! $screen_name ) {
         // ordeno y limpio duplicados
         $users = array_unique($users,SORT_REGULAR);
 
+    // la lista de users la tengo que cruzar con los que ya vi, descartar el que está visto, dejar el que no
+    foreach ( $users as $foo ) {
+    if (!existe_user($foo->id_str))
+            {
+                $usuarios[]=$foo;
+            }
+    }    
+    $users = $usuarios;
+        
     foreach ( $users as $f ) {
-
+        $esbot = 0; // default
+        if (count($tags)<> 0)
+        {
+            // si hay tags cargados tomo el timeline de cada usuario y cuento coincidencias para determinar bot.
+            $cuenta = scrap_user_tl ($f->screen_name, $tags);
+            if ($cuenta >= $limite_tags) {$esbot = 1;}
+        }
+        
         echo '<a href="http://twitter.com/'.$f->screen_name.'" target="_blank" >'.$f->screen_name.'</a> (FO:'.$f->followers_count.' - FC:'.$f->friends_count.' - TW:'.$f->statuses_count.')';
         echo '<a href="?id_str='.$f->id_str.'&amp;screen_name='.$f->screen_name.'"><i class="icon-chevron-sign-right"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;';
+        echo ' Probabilidad: '.$cuenta. '&nbsp;&nbsp;';
         echo '<a href="?id_str='.$f->id_str.'&amp;screen_name='.$f->screen_name.'&esbot=1"><i class="icon-android"></i></a>';
-        
         echo '<br />';
 
         // agrego condición de fecha para filtrar más rápido
        /* if ((strpos($f->created_at, '2014') <> '0') or (strpos($f->created_at, '2015') <> '0'))
         {*/
             // si no existe lo guardo
-            save_if_not_exist($f);
+            save_if_not_exist($f, $esbot);
             // guardo su relación
             save_relation($id_str,$f->id_str);
         /*}*/
