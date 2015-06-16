@@ -25,3 +25,14 @@ graph-list.php => Grid de relaciones de los más relevantes
 * PHP +5.x
 * MySQL
 * php-curl, php-mysql
+
+
+## TODO
+
+Parametrizar 
+
+$tags = array ("", ""); // tags para coincidencias con bots
+set_time_limit(1200); // aumento el tiempo de ejecución
+$limite_tags = 10; // límite a partir del cual se considera coincidencia abundante
+
+Estos parámetros deberían configurarse en otro lado, estan en index.php por apuro
