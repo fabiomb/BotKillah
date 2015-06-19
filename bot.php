@@ -8,7 +8,7 @@ function get_random_bot() {
     $resultadosig = $db->sql_query($siguiente);        
     return $db->sql_fetchrow($resultadosig);
 }
-function existe_user($id_str)
+function visto_user($id_str)
 {
     // devuelve un usuario que ya se visitó, para no volver a pasar una y otra vez por los mismos
     global $db;
@@ -59,7 +59,7 @@ function get_friends ( $screen_name ) {
         $followers = array_merge($followers, $result->users);
         }
         // Asi no bardea el limite
-        if ( $i > 6 ) { break; }
+        if ( $i > 3 ) { break; }
     }
 
     return $followers;
@@ -131,12 +131,32 @@ function handle_errors($result) {
     }
 }
 
-function save_if_not_exist($f, $esbot) {
+function save_if_not_exist($f, $esbot, $excluir) {
     global $db;
-    $guarda = "INSERT INTO usuario (id_str, name, screen_name, location, description, followers_count, friends_count, created_at, statuses_count, lang, esbot) "
-            . "VALUES ('$f->id_str','$f->name', '$f->screen_name', '$f->location', '$f->description', "
-            . "'$f->followers_count', '$f->friends_count', '$f->created_at', '$f->statuses_count', '$f->lang', '$esbot' )";
+    
+    // consulto, si existe actualizo estado de bot y exclusión
+        $resultado = $db->sql_query("SELECT id_str, name, screen_name, location, description, followers_count, friends_count, created_at, statuses_count, lang, esbot, excluir"
+                . " FROM usuario WHERE id_str = '$f->id_str' and screen_name = '$f->screen_name'");
+        $desdebase = FALSE;
+        while ($row = $db->sql_fetchrow($resultado)) 
+	{
+            $desdebase = TRUE;
+            
+        }   
+    if ($desdebase)
+    {
+        $guarda = "UPDATE usuario SET esbot = '$esbot', excluir = '$excluir'  WHERE id_str = '$f->id_str' and screen_name = '$f->screen_name'";
+    }
+    else
+    {
+        $guarda = "INSERT INTO usuario (id_str, name, screen_name, location, description, followers_count, friends_count, created_at, statuses_count, lang, esbot, excluir) "
+                . "VALUES ('$f->id_str','$f->name', '$f->screen_name', '$f->location', '$f->description', "
+                . "'$f->followers_count', '$f->friends_count', '$f->created_at', '$f->statuses_count', '$f->lang', '$esbot', '$excluir' )";        
+    }
+    // si no existe se inserta
     $db->sql_query($guarda);
+    //echo $guarda;
+
 }
 
 function save_tuits($id_str, $screen_name,$result) {
@@ -250,4 +270,13 @@ function get_CURL ($url)
 
     curl_close($ch);
     return $content;
+}
+
+function live_stats ()
+{
+    
+    $query_total = "SELECT count(*) as cuenta FROM `usuario` WHERE esbot = 1 ";
+    
+    $query_grilla_status = "SELECT count(*) as cuenta, visto, esbot, excluir FROM `usuario` group by visto, esbot, excluir";
+    
 }

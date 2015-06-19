@@ -1,5 +1,8 @@
 <?php 
+set_time_limit(2400);
 session_start();
+ob_start();
+
 
 include_once('config.php');
 
@@ -82,7 +85,7 @@ if ( ! $screen_name ) {
 
     // la lista de users la tengo que cruzar con los que ya vi, descartar el que está visto, dejar el que no
     foreach ( $users as $foo ) {
-    if (!existe_user($foo->id_str))
+    if (!visto_user($foo->id_str))
             {
                 $usuarios[]=$foo;
             }
@@ -91,11 +94,20 @@ if ( ! $screen_name ) {
         
     foreach ( $users as $f ) {
         $esbot = 0; // default
+        $excluir = 0; //default
         if (count($tags)<> 0)
         {
             // si hay tags cargados tomo el timeline de cada usuario y cuento coincidencias para determinar bot.
             $cuenta = scrap_user_tl ($f->screen_name, $tags);
-            if ($cuenta >= $limite_tags) {$esbot = 1;}
+            // decido si es bot
+            if ($cuenta >= $limite_tags) 
+                {
+                    $esbot = 1;
+                }
+                else
+                {
+                    $excluir = 1; // no tiene un timeline infectado, se excluye
+                }
         }
         
         echo '<a href="http://twitter.com/'.$f->screen_name.'" target="_blank" >'.$f->screen_name.'</a> (FO:'.$f->followers_count.' - FC:'.$f->friends_count.' - TW:'.$f->statuses_count.')';
@@ -109,14 +121,20 @@ if ( ! $screen_name ) {
        /* if ((strpos($f->created_at, '2014') <> '0') or (strpos($f->created_at, '2015') <> '0'))
         {*/
             // si no existe lo guardo
-            save_if_not_exist($f, $esbot);
+            save_if_not_exist($f, $esbot, $excluir);
             // guardo su relación
             save_relation($id_str,$f->id_str);
+            
+                ob_end_flush();
+                ob_flush();
+                flush();
+                ob_start();
         /*}*/
     }
     }        
     // busco uno siguiente al azar
     $next = get_random_bot();
+    
 ?>
         <form action="index.php" method="GET">
             
@@ -127,3 +145,6 @@ if ( ! $screen_name ) {
         
     </body>
 </html>
+<?php
+ob_end_flush();  
+?>
