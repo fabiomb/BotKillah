@@ -274,9 +274,17 @@ function get_CURL ($url)
 
 function live_stats ()
 {
-    
+    global $db;
+
     $query_total = "SELECT count(*) as cuenta FROM `usuario` WHERE esbot = 1 ";
+    $resultado_total = $db->sql_query($query_total);
     
     $query_grilla_status = "SELECT count(*) as cuenta, visto, esbot, excluir FROM `usuario` group by visto, esbot, excluir";
-    
+    $resultado_grilla = $db->sql_query($query_grilla_status);
+
+        while ($row = $db->sql_fetchrow($resultado)) 
+	{
+            $desdebase = TRUE;
+            
+        }       
 }
