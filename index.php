@@ -65,8 +65,59 @@ if ( ! $screen_name ) {
 
           });*/
         </script>
+        <style>
+            /* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 50px;
+}
+
+
+/*
+ * Global add-ons
+ */
+
+.sub-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/*
+ * Top navigation
+ * Hide default border to remove 1px line.
+ */
+.navbar-fixed-top {
+  border: 0;
+}
+        </style>
     </head>
     <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">BotKillah</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+    <div class="container">
+        <h1>Inspeccionando @<?php echo $screen_name;?></h1>
+        <div class="col-sm-12">
+        <div class="row">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Followers</th>
+                  <th>Followings</th>
+                  <th>Tweets</th>
+                  <th>Probability</th>
+                  <th>Inspect</th>
+                  <th>Mark as Bot</th>
+                </tr>
+              </thead>
+              <tbody>
  <?php
     // marco como leído
     mark_as_viewed($id_str);
@@ -109,13 +160,15 @@ if ( ! $screen_name ) {
                     $excluir = 1; // no tiene un timeline infectado, se excluye
                 }
         }
-        
-        echo '<a href="http://twitter.com/'.$f->screen_name.'" target="_blank" >'.$f->screen_name.'</a> (FO:'.$f->followers_count.' - FC:'.$f->friends_count.' - TW:'.$f->statuses_count.')';
-        echo '<a href="?id_str='.$f->id_str.'&amp;screen_name='.$f->screen_name.'"><i class="icon-chevron-sign-right"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;';
-        echo ' Probabilidad: '.$cuenta. '&nbsp;&nbsp;';
+        echo '<tr>';
+        echo '<td><a href="http://twitter.com/'.$f->screen_name.'" target="_blank" >'.$f->screen_name.'</a></td>';
+        echo '<td>'.$f->followers_count.'</td><td>'.$f->friends_count.'</td><td>'.$f->statuses_count.'</td>';
+        echo '<td>'.$cuenta. '</td>';
+        echo '<td><a href="?id_str='.$f->id_str.'&amp;screen_name='.$f->screen_name.'"><i class="icon-chevron-sign-right"></i></a></td>';
+        echo '<td>';
         if ($cuenta >= $limite_tags) {echo '<strong>BOT</strong>&nbsp;&nbsp;';}
         echo '<a href="?id_str='.$f->id_str.'&amp;screen_name='.$f->screen_name.'&esbot=1"><i class="icon-android"></i></a>';
-        echo '<br />';
+        echo '</td></tr>';
 
         // agrego condición de fecha para filtrar más rápido
        /* if ((strpos($f->created_at, '2014') <> '0') or (strpos($f->created_at, '2015') <> '0'))
@@ -136,13 +189,17 @@ if ( ! $screen_name ) {
     $next = get_random_bot();
     
 ?>
+              </tbody>
+    </table>
+      </div>                  
         <form action="index.php" method="GET">
             
             <input id="id_str" type="hidden" name="id_str" value="<?= $next['id_str'] ?>">
             <input id="screen_name" type="hidden" name="screen_name" value="<?= $next['screen_name'] ?>">
             
             <input id="next" type="submit" value="Siguiente: <?= $next['screen_name'] ? $next['screen_name'] : 'NONE' ?>">
-        
+        </div>
+        </div>
     </body>
 </html>
 <?php
