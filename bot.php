@@ -10,12 +10,13 @@ function get_random_bot() {
 }
 function visto_user($id_str)
 {
-    // devuelve un usuario que ya se visitó, para no volver a pasar una y otra vez por los mismos
+    // devuelve un usuario que ya se visitó o no se debe visitar
+    // para no volver a pasar una y otra vez por los mismos
     global $db;
-    $siguiente = "SELECT esbot, visto FROM `usuario` WHERE excluir = 0 and id_str = '$id_str' limit 0,1";  
+    $siguiente = "SELECT excluir, esbot, visto FROM `usuario` WHERE id_str = '$id_str' limit 0,1";  
     $resultadosig = $db->sql_query($siguiente);      
     $row = $db->sql_fetchrow($resultadosig);
-    if ($row["visto"] == 1)
+    if (($row["visto"] == 1) or ($row["excluir"] == 1))
     {
         $estado = TRUE;
     }
