@@ -103,8 +103,9 @@ body {
     </nav>
     <div class="container">
         <h1>Inspeccionando @<?php echo $screen_name;?></h1>
-        <div class="col-sm-12">
+        
         <div class="row">
+            <div class="col-sm-12">
             <table class="table table-striped">
               <thead>
                 <tr>
@@ -191,13 +192,16 @@ body {
 ?>
               </tbody>
     </table>
-      </div>                  
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
         <form action="index.php" method="GET">
             
             <input id="id_str" type="hidden" name="id_str" value="<?= $next['id_str'] ?>">
             <input id="screen_name" type="hidden" name="screen_name" value="<?= $next['screen_name'] ?>">
             
-            <input id="next" type="submit" value="Siguiente: <?= $next['screen_name'] ? $next['screen_name'] : 'NONE' ?>">
+            <input id="next" type="submit" value="Siguiente: <?= $next['screen_name'] ? $next['screen_name'] : 'NONE' ?> »" class="btn btn-default">
         </div>
         </div>
     </body>
