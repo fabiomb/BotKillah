@@ -280,12 +280,28 @@ function live_stats ()
     $query_total = "SELECT count(*) as cuenta FROM `usuario` WHERE esbot = 1 ";
     $resultado_total = $db->sql_query($query_total);
     
-        $query_grilla_status = "SELECT count(*) as cuenta, visto, esbot, excluir FROM `usuario` group by visto, esbot, excluir";
-    $resultado_grilla = $db->sql_query($query_grilla_status);
-
         while ($row = $db->sql_fetchrow($resultado)) 
 	{
-            $desdebase = TRUE;
-            
-        }       
+            $bots = $row["cuenta"];
+        }     
+    
+    $query_grilla_status = "SELECT count(*) as cuenta, visto, esbot, excluir FROM `usuario` group by visto, esbot, excluir";
+    $resultado_grilla = $db->sql_query($query_grilla_status);
+
+        while ($row = $db->sql_fetchrow($resultado_grilla)) 
+	{
+            if (($row["visto"] == 0) and ($row["esbot"] == 0) and ($row["excluir"] == 0)) {$sinanalizar = $row["cuenta"];}
+            if (($row["visto"] == 0) and ($row["esbot"] == 0) and ($row["excluir"] == 1)) {$excluidos = $row["cuenta"];}
+            if (($row["visto"] == 0) and ($row["esbot"] == 1) and ($row["excluir"] == 0)) {$esbot = $row["cuenta"];}
+            if (($row["visto"] == 1) and ($row["esbot"] == 1) and ($row["excluir"] == 0)) {$esbotanalizado = $row["cuenta"];}
+        }     
+        
+    $respuesta = new stdClass();
+    $respuesta->bots = $bots;
+    $respuesta->sinanalizar = $sinanalizar;
+    $respuesta->excluidos = $excluidos;
+    $respuesta->esbot = $esbot;
+    $respuesta->esbotanalizado = $esbotanalizado;
+    
+return $respuesta;
 }

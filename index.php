@@ -143,10 +143,11 @@ body {
             }
     }    
     $users = $usuarios;
-        
+    $explorados = 0;    
     foreach ( $users as $f ) {
         $esbot = 0; // default
         $excluir = 0; //default
+        $explorados++; // tan sólo par contar los de esta pasada
         if (count($tags)<> 0)
         {
             // si hay tags cargados tomo el timeline de cada usuario y cuento coincidencias para determinar bot.
@@ -181,7 +182,7 @@ body {
             
                 ob_end_flush();
                 ob_flush();
-                flush();
+                flush(); // SE IMPRIMEEEEEEEEEEE
                 ob_start();
         /*}*/
     }
@@ -189,11 +190,15 @@ body {
     // busco uno siguiente al azar
     $next = get_random_bot();
     
+    // obtengo estadísticas generales
+    $stats = live_stats ();
+   
 ?>
               </tbody>
     </table>
       </div>
     </div>
+
     <div class="row">
         <div class="col-sm-12">
         <form action="index.php" method="GET">
@@ -203,6 +208,17 @@ body {
             
             <input id="next" type="submit" value="Siguiente: <?= $next['screen_name'] ? $next['screen_name'] : 'NONE' ?> »" class="btn btn-default">
         </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-12">
+                Usuarios incluídos en esta instancia: <?php echo $explorados;?><br />
+                Usuarios sin analizar: <?php echo $stats->sinanalizar;?><br />
+                Usuarios excluídos: <?php echo $stats->excluidos;?><br />
+                Bots detectados sin analizar: <?php echo $stats->esbot;?><br />
+                Bots detectados analizados: <?php echo $stats->esbotanalizado;?><br />
+                Total Bots: <?php echo $stats->bots;?><br /><br /><br />
+            </div>
         </div>
     </body>
 </html>
