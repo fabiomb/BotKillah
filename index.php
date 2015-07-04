@@ -33,7 +33,8 @@ include('bot.php');
         // se quedó sin bots, necesita uno nuevo
         
     }
-
+    // obtengo estadísticas generales
+    $stats = live_stats ();
 
 ?>
 <!DOCTYPE html>
@@ -100,6 +101,15 @@ body {
             <input id="next" type="submit" value="Comenzar: <?= $usuario['screen_name'] ? $usuario['screen_name'] : 'NONE' ?> »" class="btn btn-default">
         </div>
         </div>
-        
+        <div class="row">
+            <div class="col-sm-12">
+                <br /><br />
+                Usuarios sin analizar: <?php echo $stats->sinanalizar;?><br />
+                Usuarios excluídos: <?php echo $stats->excluidos;?><br />
+                Bots detectados sin analizar: <?php echo $stats->esbot;?><br />
+                Bots detectados analizados: <?php echo $stats->esbotanalizado;?><br />
+                Total Bots: <?php echo $stats->bots;?><br /><br /><br />
+            </div>
+        </div>        
     </body>
 </html>
