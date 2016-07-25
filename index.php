@@ -92,15 +92,27 @@ body {
     </div>
 
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-6">
+        Comenzar a investigar
         <form action="spider.php" method="GET">
             
             <input id="id_str" type="hidden" name="id_str" value="<?= $usuario['id_str'] ?>">
             <input id="screen_name" type="hidden" name="screen_name" value="<?= $usuario['screen_name'] ?>">
             
             <input id="next" type="submit" value="Comenzar: <?= $usuario['screen_name'] ? $usuario['screen_name'] : 'NONE' ?> »" class="btn btn-default">
+            </form>
         </div>
+        <div class="col-sm-6">
+        Insertar semilla
+
+        <form action="semilla.php" method="GET">
+            <input id="screen_name" type="text" name="screen_name">
+            
+            <input id="next" type="submit" value="Insertar semilla »" class="btn btn-default">
+        </form>
+
         </div>
+    </div>
         <div class="row">
             <div class="col-sm-12">
                 <br /><br />

@@ -84,6 +84,21 @@ function get_tuits ($screen_name)
         
     return $result;
 }
+function get_user($screen_name)
+{
+    global $cb;
+
+    $parameters = array(
+        'screen_name'=> $screen_name
+    );    
+    
+        $result = $cb->users_show($parameters);
+        
+    return $result;
+}
+
+
+
 
 
 function get_followers ( $screen_name ) {
@@ -276,11 +291,16 @@ function get_CURL ($url)
 function live_stats ()
 {
     global $db;
+    $row = "";
+    $sinanalizar = "";
+    $esbot ="";
+    $esbotanalizado = "";
+    $excluidos = "";
 
     $query_total = "SELECT count(*) as cuenta FROM `usuario` WHERE esbot = 1 ";
     $resultado_total = $db->sql_query($query_total);
     
-        while ($row = $db->sql_fetchrow($resultado)) 
+        while ($row = $db->sql_fetchrow($resultado_total)) 
 	{
             $bots = $row["cuenta"];
         }     
