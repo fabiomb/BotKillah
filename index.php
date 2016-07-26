@@ -135,7 +135,37 @@ body {
         <br /><br />
         Trending
         <?php
-           print_r ( $trending );
+
+          $limit = $trending->rate["limit"];
+          $remaining = $trending->rate["remaining"];
+          $reset = $trending->rate["reset"];
+        foreach  ($trending as $trend)
+        {
+          break;
+        }
+          $as_of = $trend->as_of;
+          $created_at = $trend->created_at;
+
+          echo "Fecha: ". $created_at."<br />";
+
+           foreach  ($trend->trends as $trendy)
+            {   
+              $name = $trendy->name;
+              $url = $trendy->url;
+              $promoted_content = $trendy->promoted_content;
+              $query = $trendy->query;
+              $tweet_volume = $trendy->tweet_volume;
+              echo "<a href=\"$url\">$name</a> ($tweet_volume)";
+              if ($promoted_content) {echo "(Promoted)";}
+              echo "<br />";
+          }
+          echo "<br />";
+          echo "Remaining: $remaining / $limit";
+
+
+        
+
+        //   print_r ( $trending );
         ?>
         </div>
     </div>        

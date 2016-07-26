@@ -327,6 +327,7 @@ return $respuesta;
 }
 function trending($cb, $woeid)
 {
+    // cachear. cada consulta consume recursos!
     $parameters = array(
         'id'=> $woeid
     );    
