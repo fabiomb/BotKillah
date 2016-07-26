@@ -102,7 +102,7 @@ body {
 
     <div class="row">
         <div class="col-sm-6">
-        Comenzar a investigar
+        <h2>Comenzar a investigar</h2>
         <form action="spider.php" method="GET">
             
             <input id="id_str" type="hidden" name="id_str" value="<?= $usuario['id_str'] ?>">
@@ -112,7 +112,7 @@ body {
             </form>
         </div>
         <div class="col-sm-6">
-        Insertar semilla
+        <h2>Insertar semilla</h2>
 
         <form action="semilla.php" method="GET">
             <input id="screen_name" type="text" name="screen_name">
@@ -125,15 +125,20 @@ body {
     <div class="row">
         <div class="col-sm-6">
             <br /><br />
+            <h2>Stats</h2>
             Usuarios sin analizar: <?php echo $stats->sinanalizar;?><br />
             Usuarios excluídos: <?php echo $stats->excluidos;?><br />
             Bots detectados sin analizar: <?php echo $stats->esbot;?><br />
             Bots detectados analizados: <?php echo $stats->esbotanalizado;?><br />
             Total Bots: <?php echo $stats->bots;?><br /><br /><br />
+            
+            Tags de filtro: <br /><em><?php echo implode(",", $tags); ?></em><br /><br />
+            
+            Localidad: <?php echo $ciudad;?><br /><br />
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-6  pre-scrollable">
         <br /><br />
-        Trending
+        <h2>Trending</h2>
         <?php
 
           $limit = $trending->rate["limit"];
@@ -155,8 +160,10 @@ body {
               $promoted_content = $trendy->promoted_content;
               $query = $trendy->query;
               $tweet_volume = $trendy->tweet_volume;
-              echo "<a href=\"$url\">$name</a> ($tweet_volume)";
-              if ($promoted_content) {echo "(Promoted)";}
+              echo "<a href=\"$url\">$name</a> ";
+              if ($tweet_volume) {echo "($tweet_volume) ";}
+              if ($promoted_content) {echo "(Promoted) ";}
+              echo '<a href="research.php?q='.$query.'"><i class="icon-chevron-sign-right"></i></a>';
               echo "<br />";
           }
           echo "<br />";
