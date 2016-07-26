@@ -120,8 +120,7 @@ body {
               </thead>
               <tbody>
  <?php
-    // marco como leído
-    mark_as_viewed($id_str);
+
     if ($esbot == "1" ) {mark_as_bot($id_str);};
     
     if ($screen_name <> "")
@@ -135,6 +134,13 @@ body {
         // ordeno y limpio duplicados
         $users = array_unique($users,SORT_REGULAR);
 
+    if (count($users) > 1)   
+    {
+        // si pude traer la data, marco como leído
+        // marco como leído
+        mark_as_viewed($id_str);
+    }
+        
     // la lista de users la tengo que cruzar con los que ya vi, descartar el que está visto, dejar el que no
     foreach ( $users as $foo ) {
     if (!visto_user($foo->id_str))

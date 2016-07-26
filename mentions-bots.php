@@ -8,7 +8,7 @@ include_once('db/db.php');
 header ('Content-Type: text/html; charset=UTF-8');
 
 // traigo el texto con menciones
-$consulta = "SELECT texto FROM `tuit` WHERE texto REGEXP '@[[:alnum:]]' ";
+$consulta = "SELECT A.texto FROM `tuit` A JOIN usuario B ON A.id_str = B.id_str WHERE A.texto REGEXP '@[[:alnum:]]' AND B.esbot = 1 ";
 
 $resultado = $db->sql_query($consulta);    
 $xx = 0;
@@ -26,7 +26,7 @@ $menciones = array_unique($menciones,SORT_REGULAR);
 $cuenta = count ($menciones);
 
 // hashtags
-$consulta = "SELECT texto FROM `tuit` WHERE texto REGEXP '#[[:alnum:]]' ";
+$consulta = "SELECT A.texto FROM `tuit` A JOIN usuario B ON A.id_str = B.id_str WHERE A.texto REGEXP '#[[:alnum:]]' AND B.esbot = 1 ";
 
 $resultado = $db->sql_query($consulta);    
 $xx = 0;
