@@ -53,8 +53,10 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 --
 -- Indices de la tabla `relacion`
 --
-ALTER TABLE `relacion`
-  ADD UNIQUE KEY `id_str_inicio` (`id_str_inicio`,`id_str_destino`);
+--ALTER TABLE `relacion`
+--  ADD UNIQUE KEY `id_str_inicio` (`id_str_inicio`,`id_str_destino`);
+
+ALTER TABLE `tuit` CHANGE `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- Indices de la tabla `tuit`

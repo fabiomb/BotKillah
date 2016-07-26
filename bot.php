@@ -190,6 +190,7 @@ function save_tuits($id_str, $screen_name,$result) {
                 $guarda = "INSERT INTO tuit (id_str, screen_name, fecha, texto, id_tuit, favorited, retweeted) "
                         . "VALUES ('$id_str','$screen_name', '$fecha', '$texto', '$id_tuit', "
                         . "'$favorited', '$retweeted' )";
+                //echo $guarda . "<br /><br />";
                 $db->sql_query($guarda);
           }
         }

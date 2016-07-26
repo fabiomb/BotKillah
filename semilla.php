@@ -20,10 +20,65 @@ $cb->setToken($tw_token_a, $tw_token_b);
 include('bot.php');
 
 if (isset($_GET["screen_name"])) {$screen_name = $_GET["screen_name"];}
+if (isset($_GET["accion"])) {$accion = $_GET["accion"];}
+
+if ($accion == "") {$accion = "buscar";} // default
+
+if ($accion == "buscar")
+{
+    $usuario = get_user($screen_name);    
+    
+}
+if ($accion == "ok")
+{
+    $id_str = $_GET["id_str"];
+    // guardo semilla
+    // marco que es bot
+    // vuelvo al menú inicial
+    $f = new stdClass();
+    $f->id_str = $_GET["id_str"];
+    $f->name = $_GET["name"];
+    $f->screen_name = $_GET["screen_name"];
+    $f->location = $_GET["location"];
+    $f->description = $_GET["description"];
+    $f->followers_count = $_GET["followers_count"];
+    $f->friends_count = $_GET["friends_count"];
+    $f->created_at = $_GET["created_at"];
+    $f->statuses_count = $_GET["statuses_count"];
+    $f->lang = $_GET["lang"];
+    
+
+    save_if_not_exist($f, 1, 0);
+    
+     if ($screen_name <> "")
+    {
+        // tomo los tuits, prueba típica de bots para análisis posterior
+        $tuits = get_tuits ($screen_name);
+        // guardo los tuits del usuario analizado
+        save_tuits ($id_str, $screen_name, $tuits);
+        // tomo followers y amigos
+        $users = array_merge(get_followers($screen_name),get_friends($screen_name));        
+        // ordeno y limpio duplicados
+        $users = array_unique($users,SORT_REGULAR);
+    }
+    foreach ( $users as $foo ) {
+        // limpio los que ya vi
+    if (!visto_user($foo->id_str))
+            {
+                $usuarios[]=$foo;
+            }
+    }  
+    foreach ( $users as $f ) {
+        // guardo sus contactos para chequear después
+            save_if_not_exist($f, 0, 0); // default para comenzar
+            // guardo su relación
+            save_relation($id_str,$f->id_str);
+    }
+    // redirect
+    header("Location: index.php");
+}
 
 
-
-$usuario = get_user($screen_name);
 
 
 /*
@@ -83,9 +138,28 @@ body {
         
         <div class="row">
             <div class="col-sm-12">
-<?php 
-print_r ($usuario);
+
+                <?php 
+//print_r (($usuario));
 ?>
+    Datos obtenidos del usuario
+   <form action="semilla.php" method="GET">
+
+   <input id="accion" type="hidden" name="accion" value="ok">
+   screen_name: <input id="screen_name" type="text" name="screen_name" value="<?php echo $usuario->screen_name;?>"><br />
+   name: <input id="name" type="text" name="name" value="<?php echo $usuario->name;?>"><br />
+   id_str: <input id="id_str" type="text" name="id_str" value="<?php echo $usuario->id_str;?>"><br />
+   location: <input id="location" type="text" name="location" value="<?php echo $usuario->location;?>"><br />
+   description: <input id="description" type="text" name="description" value="<?php echo $usuario->description;?>"><br />
+   followers_count: <input id="followers_count" type="text" name="followers_count" value="<?php echo $usuario->followers_count;?>"><br />
+   friends_count: <input id="friends_count" type="text" name="friends_count" value="<?php echo $usuario->friends_count;?>"><br />
+    created_at: <input id="created_at" type="text" name="created_at" value="<?php echo $usuario->created_at;?>"><br />
+    statuses_count: <input id="statuses_count" type="text" name="statuses_count" value="<?php echo $usuario->statuses_count;?>"><br />
+    lang: <input id="lang" type="text" name="lang" value="<?php echo $usuario->lang;?>"><br />
+
+    
+   <input id="next" type="submit" value="Insertar semilla »" class="btn btn-default">
+   </form>
           </div>
         </div>
 
