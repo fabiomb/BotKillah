@@ -146,7 +146,6 @@ function handle_errors($result) {
         echo '<div class="alert alert-warning"><strong>Error!</strong> '.$result->errors[0]->message."</div><br />";
     }
 }
-
 function save_if_not_exist($f, $esbot, $excluir) {
     global $db;
     
@@ -325,4 +324,15 @@ function live_stats ()
     $respuesta->esbotanalizado = $esbotanalizado;
     
 return $respuesta;
+}
+function trending($cb, $woeid)
+{
+    $parameters = array(
+        'id'=> $woeid
+    );    
+    
+        $result = $cb->trends_place($parameters);
+        
+    return $result;
+    
 }

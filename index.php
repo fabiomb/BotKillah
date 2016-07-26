@@ -1,8 +1,17 @@
 <?php 
-
 include_once('config.php');
 include_once('db/db.php');
+
+// Conecto con Twitter
+require_once ('codebird-php.php');
+\Codebird\Codebird::setConsumerKey($tw_consumer, $tw_secret); // static, see 'Using multiple Codebird instances'
+
+$cb = \Codebird\Codebird::getInstance();
+$cb->setToken($tw_token_a, $tw_token_b);
+
 include('bot.php');
+
+$trending = trending($cb, $woeid);
 
 // El index sirve para disparar la primer semilla de búsqueda
 // detectar si hay al menos un bot para iniciar, caso contrario consultar por uno
@@ -75,7 +84,7 @@ body {
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">BotKillah</a>
+          <a class="navbar-brand" href="index.php">BotKillah</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
 
@@ -113,15 +122,22 @@ body {
 
         </div>
     </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <br /><br />
-                Usuarios sin analizar: <?php echo $stats->sinanalizar;?><br />
-                Usuarios excluídos: <?php echo $stats->excluidos;?><br />
-                Bots detectados sin analizar: <?php echo $stats->esbot;?><br />
-                Bots detectados analizados: <?php echo $stats->esbotanalizado;?><br />
-                Total Bots: <?php echo $stats->bots;?><br /><br /><br />
-            </div>
-        </div>        
+    <div class="row">
+        <div class="col-sm-6">
+            <br /><br />
+            Usuarios sin analizar: <?php echo $stats->sinanalizar;?><br />
+            Usuarios excluídos: <?php echo $stats->excluidos;?><br />
+            Bots detectados sin analizar: <?php echo $stats->esbot;?><br />
+            Bots detectados analizados: <?php echo $stats->esbotanalizado;?><br />
+            Total Bots: <?php echo $stats->bots;?><br /><br /><br />
+        </div>
+        <div class="col-sm-6">
+        <br /><br />
+        Trending
+        <?php
+           print_r ( $trending );
+        ?>
+        </div>
+    </div>        
     </body>
 </html>

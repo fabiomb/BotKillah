@@ -47,4 +47,7 @@ set_time_limit(1200); // aumento el tiempo de ejecución
 
 $limite_tags = 10; // límite a partir del cual se considera coincidencia abundante
 
+$woeid ="468739"; // 468739 = Buenos Aires http://developer.yahoo.com/geo/geoplanet/
+
+
 Estos parámetros deberían configurarse en otro lado, estan en index.php por apuro

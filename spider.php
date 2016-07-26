@@ -3,10 +3,7 @@ set_time_limit(2400);
 session_start();
 ob_start();
 
-
 include_once('config.php');
-
-
 include_once('db/db.php');
 
 // Conecto con Twitter
@@ -17,7 +14,9 @@ $cb = \Codebird\Codebird::getInstance();
 $cb->setToken($tw_token_a, $tw_token_b);
 
 include('bot.php');
-
+$esbot = "";
+$id_str = "";
+$screen_name = "";
 
 if (isset($_GET["id_str"])) {$id_str = $_GET["id_str"];}
 if (isset($_GET["screen_name"])) {$screen_name = $_GET["screen_name"];}
@@ -94,7 +93,7 @@ body {
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">BotKillah</a>
+          <a class="navbar-brand" href="index.php">BotKillah</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
 

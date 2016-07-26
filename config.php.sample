@@ -36,4 +36,7 @@ set_time_limit(1200);
 
 // a partir de esta cuenta ya lo marco como bot porque seguro lo es.
 $limite_tags = 10;
+
+// Ciudad para los trending topics
+$woeid ="468739"; // 468739 = Buenos Aires
 /* ################################################################## **/
