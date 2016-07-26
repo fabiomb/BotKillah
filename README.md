@@ -9,6 +9,15 @@ index.php => Escanea a partir de la base de datos o de parámetros $id_str y $sc
 
 mentions.php => Menciones a usuarios que realizan los bots, se puede modificar para que filtre hashtags, etc.
 
+semilla.php => Inserta semilla inicial, un bot conocido
+
+bot.php => Librería principal
+
+scrap.php => Ejemplo de scrapper de portada de Twitter
+
+sql/empty.sql => Base de datos
+
+
 
 En experimento se encuentran algunas pruebas:
 
@@ -18,6 +27,7 @@ graph-list.php => Grid de relaciones de los más relevantes
 
 
 
+Bases de datos de ejemplo:
 /sql/botkillah.sql.gz => Datos de ejemplo de red existente
 
 ## Dependencias
