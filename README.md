@@ -3,6 +3,11 @@ BotKillah
 
 Script para detección de bots en twitter
 
+Actualmente está completamente desactualizado, fue un experimento que funcionó muy bien pero evolucionó en una versión 2.0 que es código privado por el momento.
+
+Dejo esto aquí a modo de recuerdo.
+
+
 config.php.sample => copiar a config.php e ingresar parámetros
 
 index.php => Escanea a partir de la base de datos o de parámetros $id_str y $screen_name, el usuario de Twitter "semilla"
